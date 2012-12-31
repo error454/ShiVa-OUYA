@@ -6,3 +6,8 @@
 *.ear
 
 jni/Application.mk
+android/obj
+android/gen
+android/bin
+android/local.properties
+android/assets
