@@ -26,7 +26,7 @@ The first step is to get the source files, you can do this by forking or cloning
 ###2. Rename the Project
 The 2nd step is to rename the project.  To do so I have provided a script that you need to modify, **android/configure.sh** which handles renaming all of the source files and build scripts for you.  Note that if you're on a Mac, you should probably just expect this to fail since I'm building on windows with cygwin.  Contact me, we can probably figure out the necessary changes to the build script.
 
-###3. Add the obj/ folder from your copy of the UAT (see end of readme).
+###3. Add the obj/ folder from your copy of the UAT
 The **obj/*** folder is not included in this repository.   This missing folder contains the S3DClient libs. To get these necessary libs, you should export a project from UAT 1.4.0 beta7 and copy the obj folder into the android/ folder. Until you do this, you won't be able to compile ;)
 
 ###4. Import Into Eclipse
