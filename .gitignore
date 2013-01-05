@@ -1,7 +1,6 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -11,3 +10,5 @@ android/gen
 android/bin
 android/local.properties
 android/assets
+android/libs/armeabi
+android/libs/armeabi-v7a
