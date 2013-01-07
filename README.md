@@ -38,10 +38,11 @@ You can now import the project into eclipse, copy your STK file to **assets/S3DM
 * **/shiva** contains all of the scripts you need to get OUYA controller input from inside of ShiVa
 
 ##Controller Input in ShiVa
-Joystick events are sent to OuyaController through 2 handlers:
+Joystick events are sent to OuyaController through 3 handlers:
 
 * **onOuyaKeyEvent** receives button events
-* **onOuyaMotionEvent** receives analog joystick events
+* **onOuyaJoystick** receives analog joystick events
+* **onOuyaTouchpad** receives touchpad events
 
 You have 2 choices for handling input in ShiVa.  But for either choice to work, you must import the OuyaController and add it your game as a **User AI**.  Once you've done this you can choose between:
 
@@ -51,7 +52,7 @@ You have 2 choices for handling input in ShiVa.  But for either choice to work, 
 Example of anytime-state-querying:
 
 ```lua
-local leftAX, leftAY, rightAX, rightAY, L1, L2, L3, R1, R2, R3, bA, bB, bX, bY, bSystem, dLeft, dRight, dUp, dDown
+local leftAX, leftAY, rightAX, rightAY, L1, L2, L3, R1, R2, R3, bA, bB, bX, bY, bSystem, dLeft, dRight, dUp, dDown, touchX, touchY
     
 -- Analog joysticks are all -1 to 1, you may want to round anything <= .18 to 0 due to dead zone
 leftAX = this.getOuyaAxis ( 0, "AXIS_LS_X" ) 
@@ -87,6 +88,10 @@ dLeft = this.getOuyaKey ( 0, "LEFT" )
 dRight = this.getOuyaKey ( 0, "RIGHT" )
 dUp = this.getOuyaKey ( 0, "UP" )
 dDown = this.getOuyaKey ( 0, "DOWN" )
+
+--Touchpad
+touchX = this.getOuyaAxis( 0, "TOUCHPAD_X" )
+touchY = this.getOuyaAxis( 0, "TOUCHPAD_Y" )
 ```
 
 ##Purchasing

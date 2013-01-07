@@ -33,6 +33,9 @@ function OuyaController.initializeController ( htController )
     hashtable.add ( htController, "AXIS_RS_Y", 0 ) 
     hashtable.add ( htController, "AXIS_L2", 0 ) 
     hashtable.add ( htController, "AXIS_R2", 0 )
+    
+    hashtable.add ( htController, "TOUCHPAD_X", 0 )
+    hashtable.add ( htController, "TOUCHPAD_Y", 0 )
 	
 --------------------------------------------------------------------------------
 end

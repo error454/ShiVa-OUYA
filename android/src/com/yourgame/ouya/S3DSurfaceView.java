@@ -48,7 +48,7 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     {
         super ( context ) ;
         
-        // Required to get key events
+        // Required to get key event
         //
         setFocusable(true);
         setFocusableInTouchMode ( true ) ;
@@ -538,15 +538,23 @@ class S3DRenderer implements GLSurfaceView.Renderer
     
     public void onOuyaMotionEvent ( MotionEvent event, int player )
     {
-        //Get all the axis for the event
-        float LS_X = event.getAxisValue(OuyaController.AXIS_LS_X);
-        float LS_Y = event.getAxisValue(OuyaController.AXIS_LS_Y);
-        float RS_X = event.getAxisValue(OuyaController.AXIS_RS_X);
-        float RS_Y = event.getAxisValue(OuyaController.AXIS_RS_Y);
-        float L2 = event.getAxisValue(OuyaController.AXIS_L2);
-        float R2 = event.getAxisValue(OuyaController.AXIS_R2);
-        
-        ouyaNativeMotionEvent(player, LS_X, LS_Y, RS_X, RS_Y, L2, R2);
+        switch(event.getActionMasked()){
+            //Joystick
+            case MotionEvent.ACTION_MOVE:
+                float LS_X = event.getAxisValue(OuyaController.AXIS_LS_X);
+                float LS_Y = event.getAxisValue(OuyaController.AXIS_LS_Y);
+                float RS_X = event.getAxisValue(OuyaController.AXIS_RS_X);
+                float RS_Y = event.getAxisValue(OuyaController.AXIS_RS_Y);
+                float L2 = event.getAxisValue(OuyaController.AXIS_L2);
+                float R2 = event.getAxisValue(OuyaController.AXIS_R2);
+                
+                ouyaJoystick(player, LS_X, LS_Y, RS_X, RS_Y, L2, R2);
+                break;
+            //Touchpad
+            case MotionEvent.ACTION_HOVER_MOVE:
+                ouyaTouchpad(player, event.getX(), event.getY());
+                break;
+        }
     }
     
     //------------------------------------------------------------------
@@ -748,7 +756,8 @@ class S3DRenderer implements GLSurfaceView.Renderer
     // OUYA specific functions
     //
 	public native void ouyaKeyEvent(int playerNum, int key, boolean value);
-	public native void ouyaNativeMotionEvent(int playerNum, float ls_x, float ls_y, float rs_x, float rs_y, float l2, float r2);
+	public native void ouyaJoystick(int playerNum, float ls_x, float ls_y, float rs_x, float rs_y, float l2, float r2);
+	public native void ouyaTouchpad(int playerNum, float x, float y);
 	
     //------------------------------------------------------------------
     // Engine native functions interface.

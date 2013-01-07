@@ -526,7 +526,7 @@ extern "C"
 	// @@END_JNI_CALLBACKS@@
     //----------------------------------------------------------------------
 
-    JNIEXPORT void JNICALL Java_com_yourgame_ouya_S3DRenderer_ouyaNativeMotionEvent ( JNIEnv *_pEnv, jobject obj, jint playerNum,
+    JNIEXPORT void JNICALL Java_com_yourgame_ouya_S3DRenderer_ouyaJoystick ( JNIEnv *_pEnv, jobject obj, jint playerNum,
     			jfloat ls_x, jfloat ls_y, jfloat rs_x, jfloat rs_y, jfloat l2, jfloat r2)
 	{
 		S3DX::AIVariable args[7];
@@ -537,8 +537,18 @@ extern "C"
 		args[4].SetNumberValue( rs_y );
 		args[5].SetNumberValue( l2 );
 		args[6].SetNumberValue( r2 );
-		S3DClient_SendEventToCurrentUser( "OuyaController", "onOuyaMotionEvent", 7, (const void*)args);
+		S3DClient_SendEventToCurrentUser( "OuyaController", "onOuyaJoystick", 7, (const void*)args);
 	}
+
+    JNIEXPORT void JNICALL Java_com_yourgame_ouya_S3DRenderer_ouyaTouchpad ( JNIEnv *_pEnv, jobject obj, jint playerNum,
+        			jfloat x, jfloat y)
+    	{
+    		S3DX::AIVariable args[3];
+    		args[0].SetNumberValue( playerNum );
+    		args[1].SetNumberValue( x );
+    		args[2].SetNumberValue( y );
+    		S3DClient_SendEventToCurrentUser( "OuyaController", "ouyaTouchpad", 3, (const void*)args);
+    	}
 
 	/*
 	* I debated doing the fan-out here and calling individual handlers on the LUA side to avoid checking values in LUA where
