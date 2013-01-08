@@ -53,7 +53,9 @@ Example of anytime-state-querying:
 
 ```lua
 local leftAX, leftAY, rightAX, rightAY, L1, L2, L3, R1, R2, R3, bA, bB, bX, bY, bSystem, dLeft, dRight, dUp, dDown, touchX, touchY
-    
+
+--The first input to these "0" is the player number
+
 -- Analog joysticks are all -1 to 1, you may want to round anything <= .18 to 0 due to dead zone
 leftAX = this.getOuyaAxis ( 0, "AXIS_LS_X" ) 
 leftAY = this.getOuyaAxis ( 0, "AXIS_LS_Y" )
@@ -92,6 +94,11 @@ dDown = this.getOuyaKey ( 0, "DOWN" )
 --Touchpad
 touchX = this.getOuyaAxis( 0, "TOUCHPAD_X" )
 touchY = this.getOuyaAxis( 0, "TOUCHPAD_Y" )
+
+--If you are querying latched button states, you need to call this at the end
+--of your input query loop. It's important that you only call this from the AI
+--that you're reading button events from.
+user.sendEventImmediate ( hUser, "OuyaController", "onUpdateOldKeyStates", 0 )
 ```
 
 ##Purchasing

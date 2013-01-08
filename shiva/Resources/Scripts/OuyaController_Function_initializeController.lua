@@ -14,10 +14,8 @@ function OuyaController.initializeController ( htController )
     hashtable.add ( htController, "A", false )
     
     hashtable.add ( htController, "L1", false ) 
-    hashtable.add ( htController, "L2", false ) 
     hashtable.add ( htController, "L3", false )
     hashtable.add ( htController, "R1", false )
-    hashtable.add ( htController, "R2", false )
     hashtable.add ( htController, "R3", false )
     
     hashtable.add ( htController, "UP", false )

@@ -8,9 +8,9 @@
 function OuyaController.onOuyaTouchpad ( nPlayer, nX, nY )
 --------------------------------------------------------------------------------
 	
-	local hash = this.backupAndGetPlayerKeys ( nPlayer )
+	local hash = this.getPlayerHash ( nPlayer )
     local hset = hashtable.set
-    
+        
     hset( hash, "TOUCHPAD_X", nX )
     hset( hash, "TOUCHPAD_Y", nY )
 	

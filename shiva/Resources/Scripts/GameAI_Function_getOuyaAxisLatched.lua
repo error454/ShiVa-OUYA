@@ -9,7 +9,7 @@ function GameAI.getOuyaAxisLatched ( nPlayer, sAxis, nState )
 --------------------------------------------------------------------------------
 	
 	user.sendEventImmediate ( this.getUser ( ), "OuyaController", "onGetAxisLatched", nPlayer, sAxis, nState )
-    return user.getAIVariable ( this.getUser ( ), "OuyaController", "nResult" )
+    return user.getAIVariable ( this.getUser ( ), "OuyaController", "bResult" )
 	
 --------------------------------------------------------------------------------
 end

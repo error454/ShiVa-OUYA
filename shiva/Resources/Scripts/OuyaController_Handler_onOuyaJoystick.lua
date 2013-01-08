@@ -8,7 +8,7 @@
 function OuyaController.onOuyaJoystick ( nPlayer, ls_x, ls_y, rs_x, rs_y, l2, r2 )
 --------------------------------------------------------------------------------
 	
-    local hash = this.backupAndGetPlayerKeys ( nPlayer )
+    local hash = this.getPlayerHash ( nPlayer )
     local hset = hashtable.set
     
     hset( hash, "AXIS_LS_X", ls_x )

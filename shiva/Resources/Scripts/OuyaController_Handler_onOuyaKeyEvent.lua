@@ -8,8 +8,8 @@
 function OuyaController.onOuyaKeyEvent ( nPlayer, nKey, bDown )
 --------------------------------------------------------------------------------
 	
-	local hash = this.backupAndGetPlayerKeys ( nPlayer )
-    
+    local hash = this.getPlayerHash ( nPlayer )
+        
     --These keys have to match the constants from the OuyaController class in the ODK
     if    (nKey == 96)  then hashtable.set ( hash, "O",      bDown )
     elseif(nKey == 99)  then hashtable.set ( hash, "U",      bDown )
@@ -17,8 +17,6 @@ function OuyaController.onOuyaKeyEvent ( nPlayer, nKey, bDown )
     elseif(nKey == 97)  then hashtable.set ( hash, "A",      bDown )
     elseif(nKey == 102) then hashtable.set ( hash, "L1",     bDown )
     elseif(nKey == 103) then hashtable.set ( hash, "R1",     bDown )
-    elseif(nKey == 104) then hashtable.set ( hash, "L2",     bDown )
-    elseif(nKey == 105) then hashtable.set ( hash, "R2",     bDown )
     elseif(nKey == 106) then hashtable.set ( hash, "L3",     bDown )
     elseif(nKey == 107) then hashtable.set ( hash, "R3",     bDown )
     elseif(nKey == 19)  then hashtable.set ( hash, "UP",     bDown )

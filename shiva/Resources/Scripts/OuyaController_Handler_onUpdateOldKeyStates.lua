@@ -1,18 +1,15 @@
 --------------------------------------------------------------------------------
---  Function......... : backupAndGetPlayerKeys
+--  Handler.......... : onUpdateOldKeyStates
 --  Author........... : 
 --  Description...... : 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-function OuyaController.backupAndGetPlayerKeys ( nJoypad )
+function OuyaController.onUpdateOldKeyStates ( nPlayer )
 --------------------------------------------------------------------------------
 	
-	local hash, hashOld = this.getPlayerHash ( nJoypad )
-    
+	local hash, hashOld = this.getPlayerHash ( nPlayer )
     hashtable.copy ( hashOld, hash )
-	
-    return hash
 	
 --------------------------------------------------------------------------------
 end

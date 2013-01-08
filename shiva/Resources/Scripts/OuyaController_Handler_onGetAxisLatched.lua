@@ -8,9 +8,9 @@
 function OuyaController.onGetAxisLatched ( nPlayer, sAxis, nState )
 --------------------------------------------------------------------------------
 	
-	local vResult = this.getKeyLatched ( nPlayer, sAxis, nState )
-    this.nResult ( vResult )
-	
+    local vResult = this.getKeyLatched ( nPlayer, sAxis, nState )
+    this.bResult ( vResult )
+    	
 --------------------------------------------------------------------------------
 end
 --------------------------------------------------------------------------------
