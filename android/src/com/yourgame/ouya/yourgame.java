@@ -85,18 +85,18 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     private static ArrayList<Product> mProducts;
     
     //------------------------------------------------------------------
-	// @@BEGIN_ACTIVITY_MESSAGES_LIST@@
+    // @@BEGIN_ACTIVITY_MESSAGES_LIST@@
     //------------------------------------------------------------------
-	public static final int MSG_START_ENGINE 		    = 0 ;
-	public static final int MSG_RESUME_ENGINE 		    = 1 ;
-	public static final int MSG_PAUSE_ENGINE 		    = 2 ;
-	public static final int MSG_HIDE_SPLASH 		    = 3 ;
-	public static final int MSG_PLAY_OVERLAY_MOVIE 	    = 4 ;
-	public static final int MSG_STOP_OVERLAY_MOVIE 	    = 5 ;
+    public static final int MSG_START_ENGINE            = 0 ;
+    public static final int MSG_RESUME_ENGINE           = 1 ;
+    public static final int MSG_PAUSE_ENGINE            = 2 ;
+    public static final int MSG_HIDE_SPLASH             = 3 ;
+    public static final int MSG_PLAY_OVERLAY_MOVIE      = 4 ;
+    public static final int MSG_STOP_OVERLAY_MOVIE      = 5 ;
     //------------------------------------------------------------------
-	// @@END_ACTIVITY_MESSAGES_LIST@@
+    // @@END_ACTIVITY_MESSAGES_LIST@@
     //------------------------------------------------------------------
-	
+    
     //------------------------------------------------------------------
     @Override
     protected void onCreate ( Bundle savedInstanceState )
@@ -145,11 +145,11 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         }
         catch ( NameNotFoundException e ) { e.printStackTrace ( ) ; }
 
-		// Create the main view group and inflate startup screen (but do not add it right now, to avoid a "black flash")
-		//
-		//oSplashView 		= View.inflate ( this, R.layout.main, null ) ;
-		oViewGroup 			= new RelativeLayout ( this ) ;
-        setContentView  	( oViewGroup ) ;
+        // Create the main view group and inflate startup screen (but do not add it right now, to avoid a "black flash")
+        //
+        //oSplashView       = View.inflate ( this, R.layout.main, null ) ;
+        oViewGroup          = new RelativeLayout ( this ) ;
+        setContentView      ( oViewGroup ) ;
 
         // Fix from: http://www.stonetrip.com/developer/forum/viewtopic.php?f=75&t=26449&p=49411#p49411
         // The reason that the splashview doesn't have the correct dimensions is because the inflation doesn't have any
@@ -159,17 +159,17 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 //        LayoutInflater inflater = (LayoutInflater)this.getSystemService ( Context.LAYOUT_INFLATER_SERVICE ) ;
 //        oSplashView             = inflater.inflate ( R.layout.main, oViewGroup, false ) ;        
 
-    	//--------------------------------------------------------------
-		// @@ON_ACTIVITY_CREATED@@
-    	//--------------------------------------------------------------
-		
+        //--------------------------------------------------------------
+        // @@ON_ACTIVITY_CREATED@@
+        //--------------------------------------------------------------
+        
         // Asynchronously initialize engine and other stuff 
         //
         createAsync ( ) ;     
 
-		// Register lock-screen intent handler
-		//
-//		registerLockScreenHandlers ( ) ;
+        // Register lock-screen intent handler
+        //
+//      registerLockScreenHandlers ( ) ;
     }
 
     //------------------------------------------------------------------
@@ -177,26 +177,26 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     {
         Thread t = new Thread ( ) 
         {
-		    public void run ( ) 
-		    {
-	            // Create useful directories, extract packs and create 3DView
+            public void run ( ) 
+            {
+                // Create useful directories, extract packs and create 3DView
                 //
-                if ( ! createCacheDirectory 	( ) ||
-                     ! createHomeDirectory  	( ) ||
-                     ! extractMainPack         	( ) ||
+                if ( ! createCacheDirectory     ( ) ||
+                     ! createHomeDirectory      ( ) ||
+                     ! extractMainPack          ( ) ||
                      ! extractAdditionalFiles   ( ) )
                 {
-			        try { runOnUiThread ( new Runnable ( ) { public void run ( ) { onStorageError ( ) ; } } ) ; } 
-			        catch ( Exception e ) { }
+                    try { runOnUiThread ( new Runnable ( ) { public void run ( ) { onStorageError ( ) ; } } ) ; } 
+                    catch ( Exception e ) { }
                 }
                 else
                 {
-			        try { runOnUiThread ( new Runnable ( ) { public void run ( ) { onStartEngine ( ) ; } } ) ; } 
-			        catch ( Exception e ) { }
-                }		        		        
+                    try { runOnUiThread ( new Runnable ( ) { public void run ( ) { onStartEngine ( ) ; } } ) ; } 
+                    catch ( Exception e ) { }
+                }                               
             }
-	    } ;
-	    t.start ( ) ;
+        } ;
+        t.start ( ) ;
     }
 
     //------------------------------------------------------------------
@@ -210,29 +210,29 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 
         if ( o3DView != null )
         {
-			//o3DView.setZOrderOnTop ( true ) ; // Uncomment to make transparent background to work
-			oViewGroup.addView    ( o3DView ) ;
+            //o3DView.setZOrderOnTop ( true ) ; // Uncomment to make transparent background to work
+            oViewGroup.addView    ( o3DView ) ;
 
             // Add the splash view on top of the 3D view
             //
 //            oViewGroup.removeView ( oSplashView ) ;
-//    	    oViewGroup.addView    ( oSplashView ) ;
-			
+//          oViewGroup.addView    ( oSplashView ) ;
+            
             // Enable wake lock
             //
 //            onEnableWakeLock ( true ) ;
 
-    		// Inform the system we want the volume buttons to control the multimedia stream
-    		//
-    		setVolumeControlStream ( AudioManager.STREAM_MUSIC ) ;
+            // Inform the system we want the volume buttons to control the multimedia stream
+            //
+            setVolumeControlStream ( AudioManager.STREAM_MUSIC ) ;
 
             // Send a delayed event to actually start engine and show the 3D View
             //
             Message msg     = new Message ( )  ;
             msg.what        = MSG_START_ENGINE ;
             msg.obj         = this ;
-    		oUIHandler  	.sendMessage ( msg ) ;
-		}
+            oUIHandler      .sendMessage ( msg ) ;
+        }
     }
 
     //------------------------------------------------------------------
@@ -254,9 +254,9 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         {
             switch ( msg.what ) 
             {
-    		//----------------------------------------------------------
-			// @@BEGIN_ACTIVITY_MESSAGES_HANDLING@@
-    		//----------------------------------------------------------
+            //----------------------------------------------------------
+            // @@BEGIN_ACTIVITY_MESSAGES_HANDLING@@
+            //----------------------------------------------------------
             case MSG_START_ENGINE :
                 {
                     if ( o3DView != null )
@@ -266,9 +266,9 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
                         o3DView.requestFocus();
                         o3DView.allowInit ( ) ;
 
-    					//----------------------------------------------
-						// @@ON_ACTIVITY_ENGINE_STARTED@@
-    					//----------------------------------------------
+                        //----------------------------------------------
+                        // @@ON_ACTIVITY_ENGINE_STARTED@@
+                        //----------------------------------------------
                     }
                 }
                 break ;
@@ -295,63 +295,63 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 
             case MSG_PAUSE_ENGINE :
                 {
-			        if ( o3DView != null )
-			        {
+                    if ( o3DView != null )
+                    {
                         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
                         Log.d ( Globals.sApplicationName, "Pause activity " + Globals.sApplicationName ) ;
                         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
-			            
-				        onStopOverlayMovie           ( ) ;
-				
-						// Pause view
-						//
-			            o3DView.onPause ( ) ;
-			        }
-				}
-				break ;
+                        
+                        onStopOverlayMovie           ( ) ;
+                
+                        // Pause view
+                        //
+                        o3DView.onPause ( ) ;
+                    }
+                }
+                break ;
                 
             case MSG_HIDE_SPLASH :
                 {
-					if ( o3DView != null )
-                	{
+                    if ( o3DView != null )
+                    {
                         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
                         Log.d ( Globals.sApplicationName, "Hide splash view" ) ;
                         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
-                	    
+                        
                         // Remove splash view
                         //
-//						oViewGroup.removeView ( oSplashView ) ;
-					
-						// Force focus to 3D view
-						//
-						o3DView.requestFocus ( ) ;
-					}
+//                      oViewGroup.removeView ( oSplashView ) ;
+                    
+                        // Force focus to 3D view
+                        //
+                        o3DView.requestFocus ( ) ;
+                    }
                 }
                 break ;
 
-			case MSG_PLAY_OVERLAY_MOVIE :
-				{
-					onPlayOverlayMovie ( (String)msg.obj ) ;
-				}
-				break ;
+            case MSG_PLAY_OVERLAY_MOVIE :
+                {
+                    onPlayOverlayMovie ( (String)msg.obj ) ;
+                }
+                break ;
 
-			case MSG_STOP_OVERLAY_MOVIE :
-				{
-					onStopOverlayMovie ( ) ;
-				}
-				break ;
+            case MSG_STOP_OVERLAY_MOVIE :
+                {
+                    onStopOverlayMovie ( ) ;
+                }
+                break ;
 
-    		//----------------------------------------------------------
-			// @@END_ACTIVITY_MESSAGES_HANDLING@@
-    		//----------------------------------------------------------
+            //----------------------------------------------------------
+            // @@END_ACTIVITY_MESSAGES_HANDLING@@
+            //----------------------------------------------------------
             }
             super.handleMessage ( msg ) ;
         }
     } ;
 
-	
+    
     //------------------------------------------------------------------
-	// @@BEGIN_ACTIVITY_METHODS@@	
+    // @@BEGIN_ACTIVITY_METHODS@@   
     //------------------------------------------------------------------
     @Override
     protected void onStart ( )
@@ -392,7 +392,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 //        else
 //        {
 //            onResumeActually ( ) ;
-//		}
+//      }
     }
     
     //------------------------------------------------------------------
@@ -406,8 +406,8 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         Message msg     = new Message ( )  ;
         msg.what        = MSG_PAUSE_ENGINE ;
         msg.obj         = this ;
-        //oUIHandler  	.sendMessageDelayed ( msg, 500 ) ;
-		oUIHandler  	.sendMessage ( msg ) ;		
+        //oUIHandler    .sendMessageDelayed ( msg, 500 ) ;
+        oUIHandler      .sendMessage ( msg ) ;      
     }
     
     //------------------------------------------------------------------
@@ -432,18 +432,18 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
             OuyaFacade.getInstance().shutdown();
         }
         
-    	//--------------------------------------------------------------
-		// @@ON_ACTIVITY_DESTROYED@@
-    	//--------------------------------------------------------------
-		
-		// Unregister lock-screen intent handler
-		//
+        //--------------------------------------------------------------
+        // @@ON_ACTIVITY_DESTROYED@@
+        //--------------------------------------------------------------
+        
+        // Unregister lock-screen intent handler
+        //
 
         // Destroy 3D view
         //
         if ( o3DView != null )
         {
-        	o3DView.onTerminate ( ) ;
+            o3DView.onTerminate ( ) ;
         }
         
         //Force the app to exit.  I believe openAL is hanging up the cleanup process here
@@ -541,15 +541,15 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //------------------------------------------------------------------
     // OpenURL callback.
     //
-	public static void onOpenURL ( String sURL, String sTarget )
-	{
-	    if ( oThis != null )
-	    {
+    public static void onOpenURL ( String sURL, String sTarget )
+    {
+        if ( oThis != null )
+        {
             Intent i            = new Intent ( Intent.ACTION_VIEW ) ;
-		    i.setData		    ( Uri.parse  ( sURL ) ) ;
-		    oThis.startActivity ( i ) ;
-	    }
-	}
+            i.setData           ( Uri.parse  ( sURL ) ) ;
+            oThis.startActivity ( i ) ;
+        }
+    }
 
     //------------------------------------------------------------------
     // Sound functions.
@@ -576,18 +576,18 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //------------------------------------------------------------------
 //    public static void onSuspendSound ( boolean bSuspend )
 //    {
-//		/* Only available starting from 2.2... so let the engine do it
+//      /* Only available starting from 2.2... so let the engine do it
 //        if ( oSoundPool != null )
 //        {
-//			if ( bSuspend ) oSoundPool.autoPause  ( ) ;
-//			else 			oSoundPool.autoResume ( ) ;
-//		}*/
+//          if ( bSuspend ) oSoundPool.autoPause  ( ) ;
+//          else            oSoundPool.autoResume ( ) ;
+//      }*/
 //    }
     
     //------------------------------------------------------------------
     public static int onLoadSound ( String sURI )
     {
-		Log.d ( Globals.sApplicationName, "### onLoadSound: " + sURI ) ;
+        Log.d ( Globals.sApplicationName, "### onLoadSound: " + sURI ) ;
         return oSoundPool.load ( sURI, 1 ) ;
         /*
         try
@@ -609,68 +609,68 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //------------------------------------------------------------------
     public static int onPlaySound ( int iSound, float fVolume, boolean bLoop, float fPriority )
     {
-		//Log.d ( Globals.sApplicationName, "### onPlaySound: " + String.format ( "%d, %f, %s, %f", iSound, fVolume, bLoop ? "true" : "false", fPriority ) ) ;
-		int iStream = oSoundPool.play ( iSound, fVolume, fVolume, (int)(fPriority * 255.0f), bLoop ? -1 : 0, 1.0f )  ;		
-		//Log.d ( Globals.sApplicationName, "### onPlaySound: " + String.format ( "%d", iStream ) ) ;		
-		return ( iStream > 0 ) ? iStream : -1 ;
+        //Log.d ( Globals.sApplicationName, "### onPlaySound: " + String.format ( "%d, %f, %s, %f", iSound, fVolume, bLoop ? "true" : "false", fPriority ) ) ;
+        int iStream = oSoundPool.play ( iSound, fVolume, fVolume, (int)(fPriority * 255.0f), bLoop ? -1 : 0, 1.0f )  ;      
+        //Log.d ( Globals.sApplicationName, "### onPlaySound: " + String.format ( "%d", iStream ) ) ;       
+        return ( iStream > 0 ) ? iStream : -1 ;
     }
 
     //------------------------------------------------------------------
     public static void onPauseSound ( int iStream )
     {
-		if ( iStream > 0 )
-		{
-        	//Log.d ( Globals.sApplicationName, "### onPauseSound: " + String.format ( "%d", iStream ) ) ;
-        	oSoundPool.pause ( iStream ) ;
-		}
+        if ( iStream > 0 )
+        {
+            //Log.d ( Globals.sApplicationName, "### onPauseSound: " + String.format ( "%d", iStream ) ) ;
+            oSoundPool.pause ( iStream ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onResumeSound ( int iStream )
     {
-		if ( iStream > 0 )
-		{
-        	oSoundPool.resume ( iStream ) ;
-		}
+        if ( iStream > 0 )
+        {
+            oSoundPool.resume ( iStream ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onStopSound ( int iStream )
     {
-		if ( iStream > 0 )
-		{
-			//Log.d ( Globals.sApplicationName, "### onStopSound: " + String.format ( "%d", iStream ) ) ;
-        	oSoundPool.setVolume ( iStream, 0.0f, 0.0f ) ;
-        	oSoundPool.setLoop   ( iStream, 0 ) ;
-        	oSoundPool.stop	     ( iStream ) ;
-		}
+        if ( iStream > 0 )
+        {
+            //Log.d ( Globals.sApplicationName, "### onStopSound: " + String.format ( "%d", iStream ) ) ;
+            oSoundPool.setVolume ( iStream, 0.0f, 0.0f ) ;
+            oSoundPool.setLoop   ( iStream, 0 ) ;
+            oSoundPool.stop      ( iStream ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onSetSoundPitch ( int iStream, float fPitch )
     {
-		if ( iStream > 0 )
-		{
-         	oSoundPool.setRate ( iStream, fPitch ) ;
-		}
+        if ( iStream > 0 )
+        {
+            oSoundPool.setRate ( iStream, fPitch ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onSetSoundLooping ( int iStream, boolean bLoop )
     {
-		if ( iStream > 0 )
-		{
-        	oSoundPool.setLoop ( iStream, bLoop ? -1 : 0 ) ;
-		}
+        if ( iStream > 0 )
+        {
+            oSoundPool.setLoop ( iStream, bLoop ? -1 : 0 ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onSetSoundVolume ( int iStream, float fVolume )
     {
-		if ( iStream > 0 )
-		{
-        	oSoundPool.setVolume ( iStream, fVolume, fVolume ) ;
-		}
+        if ( iStream > 0 )
+        {
+            oSoundPool.setVolume ( iStream, fVolume, fVolume ) ;
+        }
     }
     
     //------------------------------------------------------------------
@@ -678,107 +678,107 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //
     public static int onLoadMusic ( String sURI )
     {
-		//Log.d ( Globals.sApplicationName, "### onLoadMusic: " + sURI ) ;
-		
-		for ( int i = 1 ; i < 64 ; i++ )
-		{
-			if ( aMusicsList[i] == null )
-			{
-				aMusicsList[i] = sURI ;
-				return i ;
-			}
-		}
-		return 0 ; // Means "failed"
+        //Log.d ( Globals.sApplicationName, "### onLoadMusic: " + sURI ) ;
+        
+        for ( int i = 1 ; i < 64 ; i++ )
+        {
+            if ( aMusicsList[i] == null )
+            {
+                aMusicsList[i] = sURI ;
+                return i ;
+            }
+        }
+        return 0 ; // Means "failed"
     }
     
     //------------------------------------------------------------------
     public static void onUnloadMusic ( int iMusic )
     {
-		//Log.d ( Globals.sApplicationName, "### onUnloadMusic: " + String.format ( "%d", iMusic ) ) ;
-		
-		if ( iMusic < 64 )
-		{
-			aMusicsList[ iMusic ] = null ;
-		}
+        //Log.d ( Globals.sApplicationName, "### onUnloadMusic: " + String.format ( "%d", iMusic ) ) ;
+        
+        if ( iMusic < 64 )
+        {
+            aMusicsList[ iMusic ] = null ;
+        }
     }
 
     //------------------------------------------------------------------
     public static int onPlayMusic ( int iMusic, float fVolume, boolean bLoop, float fPriority )
     {
-		//Log.d ( Globals.sApplicationName, "### onPlayMusic: " + String.format ( "%d, %f, %s, %f", iMusic, fVolume, bLoop ? "true" : "false", fPriority ) ) ;
+        //Log.d ( Globals.sApplicationName, "### onPlayMusic: " + String.format ( "%d, %f, %s, %f", iMusic, fVolume, bLoop ? "true" : "false", fPriority ) ) ;
 
-		if ( ( iMusic < 64 ) && ( aMusicsList[ iMusic ] != null ) )
-		{
-			if ( oMediaPlayer != null )
-			{
-				oMediaPlayer.stop ( ) ;
-				try
-				{
-					oMediaPlayer.setDataSource 	( aMusicsList[ iMusic ] ) ;
-				}
-				catch ( Exception e ) { e.printStackTrace ( ) ; return -1 ; }
-			}
-			else
-			{
-				oMediaPlayer = MediaPlayer.create ( oThis, Uri.parse ( aMusicsList[ iMusic ] ) ) ;
-			}
+        if ( ( iMusic < 64 ) && ( aMusicsList[ iMusic ] != null ) )
+        {
+            if ( oMediaPlayer != null )
+            {
+                oMediaPlayer.stop ( ) ;
+                try
+                {
+                    oMediaPlayer.setDataSource  ( aMusicsList[ iMusic ] ) ;
+                }
+                catch ( Exception e ) { e.printStackTrace ( ) ; return -1 ; }
+            }
+            else
+            {
+                oMediaPlayer = MediaPlayer.create ( oThis, Uri.parse ( aMusicsList[ iMusic ] ) ) ;
+            }
 
-			if ( oMediaPlayer != null )
-			{
-				oMediaPlayer.setAudioStreamType	( AudioManager.STREAM_MUSIC ) ;
-				oMediaPlayer.setLooping			( bLoop ) ;
-				oMediaPlayer.setVolume 			( fVolume, fVolume ) ;
-				oMediaPlayer.start	 			( ) ;
-				return 0 ; // Stream 0 is reserved for music
-			}
-		}
+            if ( oMediaPlayer != null )
+            {
+                oMediaPlayer.setAudioStreamType ( AudioManager.STREAM_MUSIC ) ;
+                oMediaPlayer.setLooping         ( bLoop ) ;
+                oMediaPlayer.setVolume          ( fVolume, fVolume ) ;
+                oMediaPlayer.start              ( ) ;
+                return 0 ; // Stream 0 is reserved for music
+            }
+        }
         return -1 ;
     }
 
     //------------------------------------------------------------------
     public static void onPauseMusic ( int iStream )
     {
-		Log.d ( Globals.sApplicationName, "### onPauseMusic: " + String.format ( "%d", iStream ) ) ;        
+        Log.d ( Globals.sApplicationName, "### onPauseMusic: " + String.format ( "%d", iStream ) ) ;        
 
-		if ( oMediaPlayer != null )
-		{
-			oMediaPlayer.pause ( ) ;
-		}
+        if ( oMediaPlayer != null )
+        {
+            oMediaPlayer.pause ( ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onResumeMusic ( int iStream )
     {
-		//Log.d ( Globals.sApplicationName, "### onResumeMusic: " + String.format ( "%d", iStream ) ) ;                
+        //Log.d ( Globals.sApplicationName, "### onResumeMusic: " + String.format ( "%d", iStream ) ) ;                
 
-		if ( oMediaPlayer != null )
-		{
-			oMediaPlayer.start ( ) ;
-		}
+        if ( oMediaPlayer != null )
+        {
+            oMediaPlayer.start ( ) ;
+        }
     }
     
     //------------------------------------------------------------------
     public static void onStopMusic ( int iStream )
     {
-		//Log.d ( Globals.sApplicationName, "### onStopMusic: " + String.format ( "%d", iStream ) ) ;              
-		
-		if ( oMediaPlayer != null )
-		{
-			oMediaPlayer.stop    ( ) ;
-			oMediaPlayer.release ( ) ;
-			oMediaPlayer	  = null ;
-		}          
+        //Log.d ( Globals.sApplicationName, "### onStopMusic: " + String.format ( "%d", iStream ) ) ;              
+        
+        if ( oMediaPlayer != null )
+        {
+            oMediaPlayer.stop    ( ) ;
+            oMediaPlayer.release ( ) ;
+            oMediaPlayer      = null ;
+        }          
     }
     
     //------------------------------------------------------------------
     public static void onSetMusicVolume ( int iStream, float fVolume )
     {
-		//Log.d ( Globals.sApplicationName, "### onSetMusicVolume: " + String.format ( "%d, %f", iStream, fVolume ) ) ;        
-		
-		if ( oMediaPlayer != null )
-		{
-			oMediaPlayer.setVolume 	( fVolume, fVolume ) ;
-		}
+        //Log.d ( Globals.sApplicationName, "### onSetMusicVolume: " + String.format ( "%d, %f", iStream, fVolume ) ) ;        
+        
+        if ( oMediaPlayer != null )
+        {
+            oMediaPlayer.setVolume  ( fVolume, fVolume ) ;
+        }
     }
 
     //------------------------------------------------------------------
@@ -788,37 +788,37 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     {
         Log.d ( Globals.sApplicationName, "#### onPlayOverlayMovie: " + sURI ) ;
 
-		try 
-		{
-	        if ( oVideoView == null )        
-	        {
-	            oVideoView = new VideoView ( oThis ) ;    
+        try 
+        {
+            if ( oVideoView == null )        
+            {
+                oVideoView = new VideoView ( oThis ) ;    
                 
-	            if ( oVideoView != null )
-	            {
-					oVideoView.setOnPreparedListener	( oThis ) ;
-					oVideoView.setOnErrorListener		( oThis ) ;
-	                oVideoView.setOnCompletionListener 	( oThis ) ;
-	
-					RelativeLayout.LayoutParams oVideoViewLayoutParams = new RelativeLayout.LayoutParams ( RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT ) ;
-					oVideoViewLayoutParams.addRule 	( RelativeLayout.CENTER_IN_PARENT ) ;
-					oViewGroup.addView				( oVideoView, oVideoViewLayoutParams ) ;
-					//o3DView.setVisibility 			( View.INVISIBLE ) ; // Kills the rendering context, play with ZOrder instead
-		            oVideoView.setVideoURI  		( Uri.parse ( sURI ) ) ;
-					oVideoView.setMediaController 	( new MediaController ( oThis ) ) ;
-				   	oVideoView.requestFocus 		( ) ;
-		            oVideoView.start 		        ( ) ;
-					oVideoView.setZOrderMediaOverlay( true ) ;
-		            return oVideoView.isPlaying 	( ) ;
-				}
-	        }
-		}
-		catch ( Exception e )
-		{
-			Log.d ( Globals.sApplicationName, "onPlayOverlayMovie: " + e.getMessage ( ), e ) ;
-			
-			onStopOverlayMovie ( ) ;
-		}
+                if ( oVideoView != null )
+                {
+                    oVideoView.setOnPreparedListener    ( oThis ) ;
+                    oVideoView.setOnErrorListener       ( oThis ) ;
+                    oVideoView.setOnCompletionListener  ( oThis ) ;
+    
+                    RelativeLayout.LayoutParams oVideoViewLayoutParams = new RelativeLayout.LayoutParams ( RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT ) ;
+                    oVideoViewLayoutParams.addRule  ( RelativeLayout.CENTER_IN_PARENT ) ;
+                    oViewGroup.addView              ( oVideoView, oVideoViewLayoutParams ) ;
+                    //o3DView.setVisibility             ( View.INVISIBLE ) ; // Kills the rendering context, play with ZOrder instead
+                    oVideoView.setVideoURI          ( Uri.parse ( sURI ) ) ;
+                    oVideoView.setMediaController   ( new MediaController ( oThis ) ) ;
+                    oVideoView.requestFocus         ( ) ;
+                    oVideoView.start                ( ) ;
+                    oVideoView.setZOrderMediaOverlay( true ) ;
+                    return oVideoView.isPlaying     ( ) ;
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            Log.d ( Globals.sApplicationName, "onPlayOverlayMovie: " + e.getMessage ( ), e ) ;
+            
+            onStopOverlayMovie ( ) ;
+        }
 
         return false ;
     }   
@@ -830,12 +830,12 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         
         if ( oVideoView != null )
         {
-            oVideoView.stopPlayback 		( ) ;
+            oVideoView.stopPlayback         ( ) ;
             oVideoView.setVisibility        ( View.INVISIBLE ) ;
-			oViewGroup.removeView   		( oVideoView ) ;
-			oVideoView 						= null ;
-			//o3DView.setVisibility 			( View.VISIBLE ) ;
-			o3DView.onOverlayMovieStopped	( ) ;
+            oViewGroup.removeView           ( oVideoView ) ;
+            oVideoView                      = null ;
+            //o3DView.setVisibility             ( View.VISIBLE ) ;
+            o3DView.onOverlayMovieStopped   ( ) ;
         }
     }   
 
@@ -854,7 +854,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //------------------------------------------------------------------
     public boolean onError ( MediaPlayer mp, int what, int extra )
     {
-		return false ;
+        return false ;
     } 
     
     //------------------------------------------------------------------
@@ -919,7 +919,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     { 
         if ( ! createWritableDirectory ( sOutputDirPath, true ) )
         {
-			Log.d ( Globals.sApplicationName, "Could not create folder " + sOutputDirPath ) ;
+            Log.d ( Globals.sApplicationName, "Could not create folder " + sOutputDirPath ) ;
             return false ;
         }
 
@@ -946,7 +946,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
             }
         }
         catch ( IOException e ) { e.printStackTrace ( ) ; }
-		Log.d ( Globals.sApplicationName, "Could not extract asset " + sOutputName + " to folder" + sOutputDirPath ) ;
+        Log.d ( Globals.sApplicationName, "Could not extract asset " + sOutputName + " to folder" + sOutputDirPath ) ;
         return false ;               
     }    
     
@@ -978,18 +978,18 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 
                     if ( ! createWritableDirectory ( mPackDirPath, true ) )
                     {
-            			Log.d ( Globals.sApplicationName, "Could not create folder " + mPackDirPath ) ;
-            			
+                        Log.d ( Globals.sApplicationName, "Could not create folder " + mPackDirPath ) ;
+                        
                         // If something went wrong try on the phone internal filesystem 
                         //
                         mPackDirPath = getCacheDir ( ).getAbsolutePath ( ) ;
                     
                         if ( ! createWritableDirectory ( mPackDirPath, true ) )
                         {
-                			Log.d ( Globals.sApplicationName, "Could not create folder " + mPackDirPath ) ;
+                            Log.d ( Globals.sApplicationName, "Could not create folder " + mPackDirPath ) ;
 
-                			return false ; // No choice...
-                        }                                			
+                            return false ; // No choice...
+                        }                                           
                     }
                     
                     return true ;
@@ -1042,7 +1042,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
                 for ( int i = 0 ; i < aAssets.length ; i++ )
                 {
                     //if ( ! aAssets[i].endsWith ( ".stk" ) )
-					if ( ! aAssets[i].endsWith ( "S3DMain.smf" ) ) // Using the SMF extension instead of STK so it forces AAPT to not compress the file (Android < 2.2 only)
+                    if ( ! aAssets[i].endsWith ( "S3DMain.smf" ) ) // Using the SMF extension instead of STK so it forces AAPT to not compress the file (Android < 2.2 only)
                     {
                         // Extract file
                         //
@@ -1120,23 +1120,23 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         builder.setTitle   ( Globals.sApplicationName ) ;
         //???builder.setIcon    ( R.drawable.app_icon ) ;
         builder.setPositiveButton ( "OK", new DialogInterface.OnClickListener ( ) 
-                                              {
-                                                  public void onClick ( DialogInterface dialog, int id) 
-                                                  {
-                                                     finish ( ) ;
-                                                  }
-                                              }
+        {
+            public void onClick ( DialogInterface dialog, int id) 
+            {
+                finish ( ) ;
+            }
+        }
                                    ) ;
         AlertDialog dialog = builder.create ( ) ;
         dialog.show ( ) ;
     }    
 
     //------------------------------------------------------------------
-	// @@END_ACTIVITY_METHODS@@	
+    // @@END_ACTIVITY_METHODS@@ 
     //------------------------------------------------------------------
 
     //------------------------------------------------------------------
-	// @@BEGIN_ACTIVITY_VARIABLES@@	
+    // @@BEGIN_ACTIVITY_VARIABLES@@ 
     //------------------------------------------------------------------
     // Software keyboard view.
     //
@@ -1151,7 +1151,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //------------------------------------------------------------------
     // Splash screen view.
     //
-//    private static View 			oSplashView		;
+//    private static View           oSplashView     ;
 
     //------------------------------------------------------------------
     // Video surface view.
@@ -1172,7 +1172,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     // Media player object to play musics from Java.
     //
     private static MediaPlayer      oMediaPlayer    ;
-	private static String [ ]       aMusicsList     = new String [64] ;
+    private static String [ ]       aMusicsList     = new String [64] ;
 
     //------------------------------------------------------------------
     // Power manager & wake lock object.
@@ -1203,7 +1203,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //
                            
     //------------------------------------------------------------------
-	// @@END_ACTIVITY_VARIABLES@@	
+    // @@END_ACTIVITY_VARIABLES@@   
     //------------------------------------------------------------------
 
     //------------------------------------------------------------------
@@ -1211,15 +1211,15 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     //
     static 
     {
-    	//--------------------------------------------------------------
-		// @@BEGIN_ACTIVITY_NATIVE_LIBRARIES@@	
-    	//--------------------------------------------------------------
-		System.loadLibrary ( "crypto" ) ;
-		System.loadLibrary ( "ssl" ) ;
+        //--------------------------------------------------------------
+        // @@BEGIN_ACTIVITY_NATIVE_LIBRARIES@@  
+        //--------------------------------------------------------------
+        System.loadLibrary ( "crypto" ) ;
+        System.loadLibrary ( "ssl" ) ;
         System.loadLibrary ( "openal" ) ;
         System.loadLibrary ( "S3DClient" ) ;
-    	//--------------------------------------------------------------
-		// @@END_ACTIVITY_NATIVE_LIBRARIES@@	
-    	//--------------------------------------------------------------
+        //--------------------------------------------------------------
+        // @@END_ACTIVITY_NATIVE_LIBRARIES@@    
+        //--------------------------------------------------------------
     }    
 }
