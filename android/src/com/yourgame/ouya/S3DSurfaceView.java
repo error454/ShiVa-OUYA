@@ -63,9 +63,9 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
         //
         oRenderer       = new S3DRenderer ( context, sCacheDirPath, sHomeDirPath, sPackDirPath, packFileDescriptor, packFileOffset, packFileLength, forceDefaultOrientation ) ;
         
-		// Detect display orientation
-		//
-		detectDisplayOrientation ( context ) ;
+        // Detect display orientation
+        //
+        detectDisplayOrientation ( context ) ;
         
         // Initialize OpenGL ES
         //
@@ -79,37 +79,37 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     //------------------------------------------------------------------
     // Display orientation detection (code taken from nVidia paper)
     //        
-	private void detectDisplayOrientation ( Context context )
-	{
-		WindowManager 	wm 			= (WindowManager)context.getSystemService ( Context.WINDOW_SERVICE ) ; 
-		Display 		display 	= wm.getDefaultDisplay ( ) ;
-		Class<Display>  c 			= (Class<Display>)display.getClass ( ) ; 
-		Method[] 		methods 	= c.getDeclaredMethods ( ) ; 
-		String 			rotFnName   = new String ( "getRotation" ) ; 
-		Method		 	getRotation = null ;
-		
-		for ( Method method : methods ) 
-		{
-			if ( method.getName ( ).equals( rotFnName ) ) 
-			{
-				getRotation = method ; 
-				break;
-			}
-		}
-		if ( getRotation != null ) 
-		{
-			try
-			{
-				Integer i = (Integer)getRotation.invoke ( display ) ;
-				iDisplayOrient = i.intValue ( ) ;
-			}
-			catch (Exception e) { }
-		}
-		else 
-		{
-			iDisplayOrient = display.getOrientation ( ) ;
-		}
-	}	
+    private void detectDisplayOrientation ( Context context )
+    {
+        WindowManager   wm          = (WindowManager)context.getSystemService ( Context.WINDOW_SERVICE ) ; 
+        Display         display     = wm.getDefaultDisplay ( ) ;
+        Class<Display>  c           = (Class<Display>)display.getClass ( ) ; 
+        Method[]        methods     = c.getDeclaredMethods ( ) ; 
+        String          rotFnName   = new String ( "getRotation" ) ; 
+        Method          getRotation = null ;
+        
+        for ( Method method : methods ) 
+        {
+            if ( method.getName ( ).equals( rotFnName ) ) 
+            {
+                getRotation = method ; 
+                break;
+            }
+        }
+        if ( getRotation != null ) 
+        {
+            try
+            {
+                Integer i = (Integer)getRotation.invoke ( display ) ;
+                iDisplayOrient = i.intValue ( ) ;
+            }
+            catch (Exception e) { }
+        }
+        else 
+        {
+            iDisplayOrient = display.getOrientation ( ) ;
+        }
+    }   
 
     //------------------------------------------------------------------
     // Initialization control.
@@ -208,9 +208,9 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
         
     public boolean onTouchEvent ( final MotionEvent event )
     {
-		// Note that event.getPressure ( ... ) does not work on all devices, so assume full pressure...
-		// Note that some devices send onTouchEvent continously (eg. HTC ones), and others not (eg. Samsung ones)
-		//
+        // Note that event.getPressure ( ... ) does not work on all devices, so assume full pressure...
+        // Note that some devices send onTouchEvent continously (eg. HTC ones), and others not (eg. Samsung ones)
+        //
         super.onTouchEvent ( event ) ;
         
         queueEvent
@@ -246,8 +246,8 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     {
         final int player = findOrCreatePlayer(event.getDeviceId());
         
-//    	final int uniCode = event.getUnicodeChar ( ) ;
-    	
+//      final int uniCode = event.getUnicodeChar ( ) ;
+        
         queueEvent
         (
             new Runnable ( )
@@ -268,8 +268,8 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
 
         final int player = findOrCreatePlayer(event.getDeviceId());
         
-    	queueEvent
-    	(
+        queueEvent
+        (
             new Runnable ( )
             {
                 public void run ( )
@@ -302,10 +302,10 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     //------------------------------------------------------------------
     // Movie events.
     //
-	public void onOverlayMovieStopped ( )
-	{
-		queueEvent ( new Runnable ( ) { public void run ( ) { if ( oRenderer != null ) oRenderer.onOverlayMovieStopped ( ) ; } } ) ;
-	}
+    public void onOverlayMovieStopped ( )
+    {
+        queueEvent ( new Runnable ( ) { public void run ( ) { if ( oRenderer != null ) oRenderer.onOverlayMovieStopped ( ) ; } } ) ;
+    }
 
     //------------------------------------------------------------------
     // OpenGL initialization helpers
@@ -377,7 +377,7 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     private String          sCacheDirPath   ;
     private String          sHomeDirPath    ;
     private String          sPackDirPath    ;
-	private int             iDisplayOrient  = 0 ;
+    private int             iDisplayOrient  = 0 ;
 }
 
 
@@ -405,17 +405,17 @@ class S3DRenderer implements GLSurfaceView.Renderer
 
         engineSetLocationSupport    ( false );
         engineSetHeadingSupport     ( false );
-		if ( context.checkCallingOrSelfPermission ( android.Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED )
-		{
-			engineSetDeviceIPAddress	( getDeviceIPAddress ( ) ) ;
-		}
-		if ( context.checkCallingOrSelfPermission ( android.Manifest.permission.READ_PHONE_STATE ) == PackageManager.PERMISSION_GRANTED )
-		{
-			engineSetDeviceUUID			( getDeviceUUID ( context ) ) ;
-		}
+        if ( context.checkCallingOrSelfPermission ( android.Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED )
+        {
+            engineSetDeviceIPAddress    ( getDeviceIPAddress ( ) ) ;
+        }
+        if ( context.checkCallingOrSelfPermission ( android.Manifest.permission.READ_PHONE_STATE ) == PackageManager.PERMISSION_GRANTED )
+        {
+            engineSetDeviceUUID         ( getDeviceUUID ( context ) ) ;
+        }
 
-        oContext 	= context ;
-        bPaused  	= false ;
+        oContext    = context ;
+        bPaused     = false ;
     }
 
     //------------------------------------------------------------------
@@ -423,7 +423,7 @@ class S3DRenderer implements GLSurfaceView.Renderer
     //
     public void onAllowInit ( )
     {
-		bAllowInit  = true ;
+        bAllowInit  = true ;
     }
 
     //------------------------------------------------------------------
@@ -431,9 +431,9 @@ class S3DRenderer implements GLSurfaceView.Renderer
     //
     public void onPause ( )
     {
-		enginePause     ( true ) ;
-		bPaused		    = true   ;
-//		bSplashVisible  = true   ; // For resume
+        enginePause     ( true ) ;
+        bPaused         = true   ;
+//      bSplashVisible  = true   ; // For resume
     }
 
     //------------------------------------------------------------------
@@ -441,8 +441,8 @@ class S3DRenderer implements GLSurfaceView.Renderer
     //
     public void onResume ( )
     {
-		enginePause ( false ) ;
-		bPaused		= false   ;
+        enginePause ( false ) ;
+        bPaused     = false   ;
     }
     
     //------------------------------------------------------------------
@@ -467,7 +467,7 @@ class S3DRenderer implements GLSurfaceView.Renderer
     //
     public void onSurfaceCreated ( GL10 gl, EGLConfig config )
     {
-		engineOnSurfaceCreated ( ) ;
+        engineOnSurfaceCreated ( ) ;
     }
 
     //------------------------------------------------------------------
@@ -493,32 +493,32 @@ class S3DRenderer implements GLSurfaceView.Renderer
         {
             // Run one engine frame
             //
-        	if ( engineRunOneFrame ( ) )
-			{
-				// Overlay movie handling
-				//
-				String   sOverlayMovieToPlay  = engineGetOverlayMovie ( ) ;
-				if   ( ! sOverlayMovieToPlay.equals ( sOverlayMovie ) )
-				{
-					sOverlayMovie = sOverlayMovieToPlay ;
-					if ( sOverlayMovie.length ( ) > 0 ) Message.obtain ( ((yourgame)oContext).oUIHandler, yourgame.MSG_PLAY_OVERLAY_MOVIE, sOverlayMovie ).sendToTarget ( ) ;
-					else                                Message.obtain ( ((yourgame)oContext).oUIHandler, yourgame.MSG_STOP_OVERLAY_MOVIE                ).sendToTarget ( ) ;
-				}
+            if ( engineRunOneFrame ( ) )
+            {
+                // Overlay movie handling
+                //
+                String   sOverlayMovieToPlay  = engineGetOverlayMovie ( ) ;
+                if   ( ! sOverlayMovieToPlay.equals ( sOverlayMovie ) )
+                {
+                    sOverlayMovie = sOverlayMovieToPlay ;
+                    if ( sOverlayMovie.length ( ) > 0 ) Message.obtain ( ((yourgame)oContext).oUIHandler, yourgame.MSG_PLAY_OVERLAY_MOVIE, sOverlayMovie ).sendToTarget ( ) ;
+                    else                                Message.obtain ( ((yourgame)oContext).oUIHandler, yourgame.MSG_STOP_OVERLAY_MOVIE                ).sendToTarget ( ) ;
+                }
 
-//				gl.glFinish ( ) ;
-			}
-			else
+//              gl.glFinish ( ) ;
+            }
+            else
             {
                 ((Activity) oContext).finish ( ) ;
             }
-			
+            
             // Hide splash sceen once engine has been initialized and that one frame has passed
-		    //
+            //
 //            if ( bSplashVisible )
 //            {
 //                Message.obtain ( ((yourgame)oContext).oUIHandler, yourgame.MSG_HIDE_SPLASH ).sendToTarget ( ) ;
 //                bSplashVisible = false ;
-//            }		
+//            }     
         }
     }
 
@@ -590,8 +590,8 @@ class S3DRenderer implements GLSurfaceView.Renderer
                     case MotionEvent.ACTION_POINTER_UP  : engineOnMouseButtonUp   ( x0, y0 ) ; bNoMoreContacts = true ; break ;
                 }
             }
-			else if ( iActionMasked == MotionEvent.ACTION_POINTER_UP )
-			{
+            else if ( iActionMasked == MotionEvent.ACTION_POINTER_UP )
+            {
                 int      iActionPointer = ( action & 0x0000ff00 ) >> 8 ;
                 switch ( iActionPointer )
                 {
@@ -600,8 +600,8 @@ class S3DRenderer implements GLSurfaceView.Renderer
                     case 2 : p2 = 0.0f ; break ;
                     case 3 : p3 = 0.0f ; break ;
                     case 4 : p4 = 0.0f ; break ;
-                }				
-			}
+                }               
+            }
         
             if ( bNoMoreContacts )
             {
@@ -645,100 +645,100 @@ class S3DRenderer implements GLSurfaceView.Renderer
     //------------------------------------------------------------------
     // Movie handling.
     //
-	public void onOverlayMovieStopped ( )
-	{
-	    if ( ! bPaused ) engineOnOverlayMovieStopped ( ) ;
-	}
-	
+    public void onOverlayMovieStopped ( )
+    {
+        if ( ! bPaused ) engineOnOverlayMovieStopped ( ) ;
+    }
+    
     //------------------------------------------------------------------
     // Utilities.
     //
-	static String getDeviceIPAddress ( ) 
-	{
-		try 
-		{
-			Log.d ( "S3DRenderer", "Retrieving device IP address..." ) ;
-			
-			for ( Enumeration en = NetworkInterface.getNetworkInterfaces ( ) ; en.hasMoreElements ( ) ; ) 
-			{
-				NetworkInterface intf = (NetworkInterface)en.nextElement ( ) ;
-				
-				for ( Enumeration enumIpAddr = intf.getInetAddresses ( ) ; enumIpAddr.hasMoreElements ( ) ; ) 
-				{
-					InetAddress inetAddress = (InetAddress)enumIpAddr.nextElement ( ) ;
-					
-					if ( ! inetAddress.isLoopbackAddress ( ) ) 
-					{
-						return inetAddress.getHostAddress ( ).toString ( ) ;
-					}
-				}
-			}
-		} 
-		catch ( SocketException ex ) 
-		{
-			Log.e ( "S3DRenderer", ex.toString ( ) ) ;
-		}
-		return "" ;
-    }	
+    static String getDeviceIPAddress ( ) 
+    {
+        try 
+        {
+            Log.d ( "S3DRenderer", "Retrieving device IP address..." ) ;
+            
+            for ( Enumeration en = NetworkInterface.getNetworkInterfaces ( ) ; en.hasMoreElements ( ) ; ) 
+            {
+                NetworkInterface intf = (NetworkInterface)en.nextElement ( ) ;
+                
+                for ( Enumeration enumIpAddr = intf.getInetAddresses ( ) ; enumIpAddr.hasMoreElements ( ) ; ) 
+                {
+                    InetAddress inetAddress = (InetAddress)enumIpAddr.nextElement ( ) ;
+                    
+                    if ( ! inetAddress.isLoopbackAddress ( ) ) 
+                    {
+                        return inetAddress.getHostAddress ( ).toString ( ) ;
+                    }
+                }
+            }
+        } 
+        catch ( SocketException ex ) 
+        {
+            Log.e ( "S3DRenderer", ex.toString ( ) ) ;
+        }
+        return "" ;
+    }   
     //------------------------------------------------------------------
-	static String getDeviceUUID ( Context context ) 
-	{
-		// Source: http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id
-		//
-		UUID  uuid = null;
-		try
-		{
-	    	final String PREFS_FILE	     = "device_id.xml";
-	    	final String PREFS_DEVICE_ID = "device_id";
-			final SharedPreferences prefs = context.getSharedPreferences( PREFS_FILE, 0);
-			final String id = prefs.getString(PREFS_DEVICE_ID, null );
+    static String getDeviceUUID ( Context context ) 
+    {
+        // Source: http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id
+        //
+        UUID  uuid = null;
+        try
+        {
+            final String PREFS_FILE      = "device_id.xml";
+            final String PREFS_DEVICE_ID = "device_id";
+            final SharedPreferences prefs = context.getSharedPreferences( PREFS_FILE, 0);
+            final String id = prefs.getString(PREFS_DEVICE_ID, null );
 
-			if (id != null) 
-			{
-				// Use the ids previously computed and stored in the prefs file
-				uuid = UUID.fromString(id);
-				//Log.d ( "S3DRenderer", "Using stored UUID: " + uuid ) ;
-			} 
-			else
-			{
-				final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
+            if (id != null) 
+            {
+                // Use the ids previously computed and stored in the prefs file
+                uuid = UUID.fromString(id);
+                //Log.d ( "S3DRenderer", "Using stored UUID: " + uuid ) ;
+            } 
+            else
+            {
+                final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
 
-				//Log.d ( "S3DRenderer", "Android ID: " + androidId ) ;
-				
-				// Use the Android ID unless it's broken, in which case fallback on deviceId,
-				// unless it's not available, then fallback on a random number which we store
-				// to a prefs file
-				try 
-				{
-					// On some devices (eg. Motorola Milestone) the ANDROID_ID is NULL,
-					// at least if no SIM is present.
-					//
-					if ((androidId != null) && (!"9774d56d682e549c".equals(androidId)) ) 
-					{
-						uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-					} 
-					else
-					{
-						TelephonyManager telephonyMgr = (TelephonyManager) context.getSystemService( Context.TELEPHONY_SERVICE );
-						final String deviceId = (telephonyMgr!=null) ? telephonyMgr.getDeviceId() : null;
-						uuid = (deviceId!=null) ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
-					}
-				} 
-				catch (UnsupportedEncodingException e) 
-				{
-					throw new RuntimeException(e);
-				}
+                //Log.d ( "S3DRenderer", "Android ID: " + androidId ) ;
+                
+                // Use the Android ID unless it's broken, in which case fallback on deviceId,
+                // unless it's not available, then fallback on a random number which we store
+                // to a prefs file
+                try 
+                {
+                    // On some devices (eg. Motorola Milestone) the ANDROID_ID is NULL,
+                    // at least if no SIM is present.
+                    //
+                    if ((androidId != null) && (!"9774d56d682e549c".equals(androidId)) ) 
+                    {
+                        uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+                    } 
+                    else
+                    {
+                        TelephonyManager telephonyMgr = (TelephonyManager) context.getSystemService( Context.TELEPHONY_SERVICE );
+                        final String deviceId = (telephonyMgr!=null) ? telephonyMgr.getDeviceId() : null;
+                        uuid = (deviceId!=null) ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+                    }
+                } 
+                catch (UnsupportedEncodingException e) 
+                {
+                    throw new RuntimeException(e);
+                }
 
-				// Write the value out to the prefs file
-				prefs.edit().putString(PREFS_DEVICE_ID, uuid.toString() ).commit();
-			}
-		}
-		catch ( Exception e )
-		{
-			Log.e ( "S3DRenderer", e.toString ( ) ) ;
-		}
-		return (uuid!=null)?uuid.toString():"";
-    }	
+                // Write the value out to the prefs file
+                prefs.edit().putString(PREFS_DEVICE_ID, uuid.toString() ).commit();
+            }
+        }
+        catch ( Exception e )
+        {
+            Log.e ( "S3DRenderer", e.toString ( ) ) ;
+        }
+        return (uuid!=null)?uuid.toString():"";
+    }   
 
     //------------------------------------------------------------------
     // Member variables.
@@ -746,57 +746,57 @@ class S3DRenderer implements GLSurfaceView.Renderer
     private boolean bAllowInit      = false ; // To for engine to start ONCE the splash view is on top
 //    private boolean bSplashVisible  = true  ;
     private boolean bInitialized    = false ;
-    private boolean bPaused  		= false ;
-    private Context oContext 		;
-	private String  sOverlayMovie 	= ""    ;
-	private boolean bCameraDevice   = false ;
-	//private boolean bVibrate		= false ;
+    private boolean bPaused         = false ;
+    private Context oContext        ;
+    private String  sOverlayMovie   = ""    ;
+    private boolean bCameraDevice   = false ;
+    //private boolean bVibrate      = false ;
 
-	//------------------------------------------------------------------
+    //------------------------------------------------------------------
     // OUYA specific functions
     //
-	public native void ouyaKeyEvent(int playerNum, int key, boolean value);
-	public native void ouyaJoystick(int playerNum, float ls_x, float ls_y, float rs_x, float rs_y, float l2, float r2);
-	public native void ouyaTouchpad(int playerNum, float x, float y);
-	
+    public native void ouyaKeyEvent(int playerNum, int key, boolean value);
+    public native void ouyaJoystick(int playerNum, float ls_x, float ls_y, float rs_x, float rs_y, float l2, float r2);
+    public native void ouyaTouchpad(int playerNum, float x, float y);
+    
     //------------------------------------------------------------------
     // Engine native functions interface.
     //
     public native void      engineSetPackFileDescriptor         ( FileDescriptor fileDescriptor, long offset, long length ) ;
-    public native void      engineSetDirectories            	( String sCacheDirPath, String sHomeDirPath, String sPackDirPath ) ;
-    public native void      engineSetLocationSupport        	( boolean b ) ;
-    public native void      engineSetHeadingSupport         	( boolean b ) ;
-    public native void      engineSetDeviceName         		( String sName ) ;
-    public native void      engineSetDeviceModel        		( String sModel ) ;
-    public native void      engineSetDeviceIPAddress        	( String sAddress ) ;
-	public native void      engineSetDeviceUUID					( String sUUID ) ;
-    public native void      engineSetSystemVersion				( String sVersion ) ;
-    public native void      engineSetSystemLanguage         	( String sLanguage ) ;
+    public native void      engineSetDirectories                ( String sCacheDirPath, String sHomeDirPath, String sPackDirPath ) ;
+    public native void      engineSetLocationSupport            ( boolean b ) ;
+    public native void      engineSetHeadingSupport             ( boolean b ) ;
+    public native void      engineSetDeviceName                 ( String sName ) ;
+    public native void      engineSetDeviceModel                ( String sModel ) ;
+    public native void      engineSetDeviceIPAddress            ( String sAddress ) ;
+    public native void      engineSetDeviceUUID                 ( String sUUID ) ;
+    public native void      engineSetSystemVersion              ( String sVersion ) ;
+    public native void      engineSetSystemLanguage             ( String sLanguage ) ;
     public native void      engineSetCameraDeviceCount          ( int n ) ;
     public native void      engineSetCameraDeviceName           ( int n, String sName ) ;
     public native void      engineOnCameraDeviceFrame           ( byte[] data, int w, int h ) ;
-    public native boolean   engineInitialize                	( ) ;
-    public native void      engineShutdown                  	( ) ;
-    public native boolean   engineRunOneFrame               	( ) ;
-	public native void      enginePause							( boolean b ) ;
+    public native boolean   engineInitialize                    ( ) ;
+    public native void      engineShutdown                      ( ) ;
+    public native boolean   engineRunOneFrame                   ( ) ;
+    public native void      enginePause                         ( boolean b ) ;
     public native void      engineOnSurfaceCreated              ( ) ;
     public native void      engineOnSurfaceChanged              ( int w, int h ) ;
-    public native void      engineOnMouseMove               	( float x, float y ) ;
-    public native void      engineOnMouseButtonDown         	( float x, float y ) ;
-    public native void      engineOnMouseButtonUp           	( float x, float y ) ;
-    public native void      engineOnDeviceMove              	( float x, float y, float z ) ;
-    public native void      engineOnKeyboardKeyDown         	( int key, int uni ) ;
-    public native void      engineOnKeyboardKeyUp           	( int key, int uni ) ;
-    public native void      engineOnTouchesChange           	( int tc1, float x1, float y1, int tc2, float x2, float y2, int tc3, float x3, float y3, int tc4, float x4, float y4, int tc5, float x5, float y5 ) ;
-    public native void      engineOnLocationChanged         	( float x, float y, float z ) ;
-    public native void      engineOnHeadingChanged          	( float angle ) ;
-    public native void      engineForceDefaultOrientation   	( boolean b ) ;
-    public native void      engineOnOverlayMovieStopped			( ) ;
+    public native void      engineOnMouseMove                   ( float x, float y ) ;
+    public native void      engineOnMouseButtonDown             ( float x, float y ) ;
+    public native void      engineOnMouseButtonUp               ( float x, float y ) ;
+    public native void      engineOnDeviceMove                  ( float x, float y, float z ) ;
+    public native void      engineOnKeyboardKeyDown             ( int key, int uni ) ;
+    public native void      engineOnKeyboardKeyUp               ( int key, int uni ) ;
+    public native void      engineOnTouchesChange               ( int tc1, float x1, float y1, int tc2, float x2, float y2, int tc3, float x3, float y3, int tc4, float x4, float y4, int tc5, float x5, float y5 ) ;
+    public native void      engineOnLocationChanged             ( float x, float y, float z ) ;
+    public native void      engineOnHeadingChanged              ( float angle ) ;
+    public native void      engineForceDefaultOrientation       ( boolean b ) ;
+    public native void      engineOnOverlayMovieStopped         ( ) ;
 
-    public native String 	engineGetOverlayMovie				( ) ;
-    public native boolean 	engineGetCameraDeviceState		    ( ) ;
-    public native boolean 	engineGetWantSwapBuffers		    ( ) ;
-	//public native boolean	engineGetVibratorState				( ) ;
+    public native String    engineGetOverlayMovie               ( ) ;
+    public native boolean   engineGetCameraDeviceState          ( ) ;
+    public native boolean   engineGetWantSwapBuffers            ( ) ;
+    //public native boolean engineGetVibratorState              ( ) ;
 }
 
 //----------------------------------------------------------------------
@@ -883,7 +883,7 @@ class S3DConfigChooserGLES1 implements GLSurfaceView.EGLConfigChooser
         //EGL10.EGL_GREEN_SIZE, 4,
         //EGL10.EGL_BLUE_SIZE, 4,
         //EGL10.EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
-		EGL10.EGL_DEPTH_SIZE, 16,
+        EGL10.EGL_DEPTH_SIZE, 16,
         EGL10.EGL_NONE
     };
 
@@ -915,8 +915,8 @@ class S3DConfigChooserGLES1 implements GLSurfaceView.EGLConfigChooser
 
     public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) 
     {
-		// Try best match first
-		//
+        // Try best match first
+        //
         for(EGLConfig config : configs) 
         {
             int d = findConfigAttrib ( egl, display, config, EGL10.EGL_DEPTH_SIZE,   0 ) ;
@@ -935,13 +935,13 @@ class S3DConfigChooserGLES1 implements GLSurfaceView.EGLConfigChooser
             if (r == mRedSize && g == mGreenSize && b == mBlueSize && a == mAlphaSize)
                 return config;
         }
-		// Retry with no stencil buffer 
-		//
-		if ( mStencilSize > 0 )
-		{
-			mStencilSize    = 0;
-			return chooseConfig(egl, display, configs);
-		}
+        // Retry with no stencil buffer 
+        //
+        if ( mStencilSize > 0 )
+        {
+            mStencilSize    = 0;
+            return chooseConfig(egl, display, configs);
+        }
         // Fallback to RGB565 with 16bits depth
         //
         if ( mRedSize       != 5    &&
@@ -1106,11 +1106,11 @@ class S3DConfigChooserGLES2 implements GLSurfaceView.EGLConfigChooser
     private static int EGL_OPENGL_ES2_BIT = 4;
     private static int[] s_configAttribs2 =
     {
-        EGL10.EGL_RED_SIZE, 		4,
-        EGL10.EGL_GREEN_SIZE, 		4,
-        EGL10.EGL_BLUE_SIZE, 		4,
+        EGL10.EGL_RED_SIZE,         4,
+        EGL10.EGL_GREEN_SIZE,       4,
+        EGL10.EGL_BLUE_SIZE,        4,
         EGL10.EGL_RENDERABLE_TYPE,  EGL_OPENGL_ES2_BIT,
-		EGL10.EGL_DEPTH_SIZE, 		16,
+        EGL10.EGL_DEPTH_SIZE,       16,
         EGL10.EGL_NONE
     };
 
@@ -1142,9 +1142,9 @@ class S3DConfigChooserGLES2 implements GLSurfaceView.EGLConfigChooser
 
     public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display, EGLConfig[] configs) 
     {
-		// Try best match first
-		//
-		for(EGLConfig config : configs) 
+        // Try best match first
+        //
+        for(EGLConfig config : configs) 
         {
             int d = findConfigAttrib ( egl, display, config, EGL10.EGL_DEPTH_SIZE,   0 ) ;
             int s = findConfigAttrib ( egl, display, config, EGL10.EGL_STENCIL_SIZE, 0 ) ;
@@ -1162,13 +1162,13 @@ class S3DConfigChooserGLES2 implements GLSurfaceView.EGLConfigChooser
             if (r == mRedSize && g == mGreenSize && b == mBlueSize && a == mAlphaSize)
                 return config;                
         }
-		// Retry with no stencil buffer 
-		//
-		if ( mStencilSize > 0 )
-		{
-			mStencilSize    = 0;
-			return chooseConfig(egl, display, configs);
-		}
+        // Retry with no stencil buffer 
+        //
+        if ( mStencilSize > 0 )
+        {
+            mStencilSize    = 0;
+            return chooseConfig(egl, display, configs);
+        }
         // Fallback to RGB565 with 16bits depth
         //
         if ( mRedSize       != 5    &&
