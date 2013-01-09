@@ -444,7 +444,10 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         if ( o3DView != null )
         {
         	o3DView.onTerminate ( ) ;
-		}
+        }
+        
+        //Force the app to exit.  I believe openAL is hanging up the cleanup process here
+        System.exit(0);
     }
     
     public native void receiveOuyaProductList(int count);
