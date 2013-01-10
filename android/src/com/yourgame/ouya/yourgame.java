@@ -17,18 +17,15 @@ import java.util.Locale;
 import tv.ouya.console.api.CancelIgnoringOuyaResponseListener;
 import tv.ouya.console.api.OuyaEncryptionHelper;
 import tv.ouya.console.api.OuyaFacade;
-import tv.ouya.console.api.OuyaResponseListener;
 import tv.ouya.console.api.Product;
 import tv.ouya.console.api.Purchasable;
 import tv.ouya.console.api.Receipt;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.KeyguardManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.LayoutInflater;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.pm.ApplicationInfo;
@@ -36,8 +33,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.BroadcastReceiver;
 import android.util.Log;
 import android.widget.VideoView;
 import android.widget.RelativeLayout;
@@ -49,7 +44,6 @@ import android.widget.MediaController;
 import android.os.Build;
 import android.os.Message;
 import android.os.Handler;
-import android.os.PowerManager;
 
 // @@END_ACTIVITY_IMPORTS@@
 //----------------------------------------------------------------------
@@ -67,7 +61,7 @@ class Globals
     public static boolean bForceDefaultOrientation = false;
     
     public static final boolean bInAppPurchasingEnabled = false;
-    public static final String DEVELOPER_ID = "GET FROM OUYA PORTAL";
+    public static final String DEVELOPER_ID = "get on dev portal";
     
     //------------------------------------------------------------------
 
@@ -81,7 +75,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
 {
     private static final String TAG = "yourgame";
     
-    private static final List<Purchasable> PRODUCT_ID_LIST = Arrays.asList(new Purchasable("YOUR_PRODUCT_LIST"));
+    private static final List<Purchasable> PRODUCT_ID_LIST = Arrays.asList(new Purchasable("YOUR_PURCHASEABLES"));
     private static ArrayList<Product> mProducts;
     
     //------------------------------------------------------------------
@@ -105,16 +99,12 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         if(Globals.bInAppPurchasingEnabled)
         {
             OuyaFacade.getInstance().init(this, Globals.DEVELOPER_ID);
-//            requestOUYAProductList();
-//            requestOUYAReceipts();
         }
         
         // Call parent constructor
         //
         super.onCreate  ( savedInstanceState ) ;
 
-//        requestOuyaGamerID();
-        
         // Get singleton
         //
         oThis = this ;
@@ -450,8 +440,11 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         System.exit(0);
     }
     
-    public native void receiveOuyaProductList(int count);
-    public static void requestOuyaProductList()
+    /**
+     * Request a list of OUYA products.
+     * When the request has completed, send the results to shiva one at a time
+     */
+    public synchronized static void requestOuyaProductList()
     {
         Log.d(TAG, "Requesting OUYA product list");
         OuyaFacade.getInstance().requestProductList(PRODUCT_ID_LIST, new CancelIgnoringOuyaResponseListener<ArrayList<Product>>() {
@@ -459,44 +452,61 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
             @Override
             public void onSuccess(ArrayList<Product> products) {
                 mProducts = products;
-                Log.i(TAG, "Got products!");
+
                 for(Product p : products) {
-                    Log.i(TAG, p.getName() + " costs " + p.getPriceInCents());
+                    oThis.receiveOuyaProduct(p.getIdentifier(), p.getName(), p.getPriceInCents());
                 }
-                oThis.receiveOuyaProductList(products.size());
             }
             
             @Override
             public void onFailure(int errorCode, String message, Bundle arg2) {
-                Log.e(TAG, "Failed to get products");
-                oThis.receiveOuyaProductList(0);
+                oThis.receiveOuyaProduct(null, null, 0);
             }
         });
     }
     
-    public native void receiveOuyaPurchase(boolean success);
-    public static void requestOuyaPurchase(int index)
+    /**
+     * Returns the specified product index to ShiVa
+     */
+    public synchronized static void requestOuyaProduct(int index){
+        if(mProducts.size() > index)
+        {
+            Product p = mProducts.get(index);
+            oThis.receiveOuyaProduct(p.getIdentifier(), p.getName(), p.getPriceInCents());
+        }
+    }
+    public native void receiveOuyaProduct(String id, String name, int price);
+    
+    /**
+     * Purchase the specified index
+     * @param index
+     */
+    public synchronized static void requestOuyaPurchase(int index)
     {
-        Log.d(TAG, "Requesting OUYA Purchase");
-        Purchasable productToBuy = PRODUCT_ID_LIST.get(index);
-        OuyaFacade.getInstance().requestPurchase(productToBuy, new CancelIgnoringOuyaResponseListener<Product>() {
-            @Override
-            public void onSuccess(Product product) {
-                Log.d(TAG, "You purchased: " + product.getName());
-                oThis.receiveOuyaPurchase(true);
-            }
-            
-            public void onFailure(int errorCode, String errorMessage, Bundle errorBundle) {
-                Log.e(TAG, "Failed to purchase item");
-                oThis.receiveOuyaPurchase(false);
-            };
-        });
+        if(index < PRODUCT_ID_LIST.size()){
+            Purchasable productToBuy = PRODUCT_ID_LIST.get(index);
+            OuyaFacade.getInstance().requestPurchase(productToBuy, new CancelIgnoringOuyaResponseListener<Product>() {
+                @Override
+                public void onSuccess(Product product) {
+                    oThis.receiveOuyaPurchase(true);
+                }
+                
+                public void onFailure(int errorCode, String errorMessage, Bundle errorBundle) {
+                    oThis.receiveOuyaPurchase(false);
+                };
+            });
+        }
+        else{
+            oThis.receiveOuyaPurchase(false);
+        }
     }
+    public native void receiveOuyaPurchase(boolean success);
     
-    public native void receiveOuyaReceipts();
+    /**
+     * Get the list of entitlements the user has
+     */
     public static void requestOuyaReceipts()
     {
-        Log.d(TAG, "Requesting OUYA receipts");
         OuyaFacade.getInstance().requestReceipts(new CancelIgnoringOuyaResponseListener<String>() 
         {
             @Override
@@ -509,34 +519,35 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
                     throw new RuntimeException(e);
                 }
                 for (Receipt r : receipts) {
-                    Log.d(TAG, "You have previously purchased: " + r.getIdentifier());
+                    oThis.receiveOuyaReceipt(r.getIdentifier(), r.getPurchaseDate().toString(), r.getPriceInCents());
                 }
             }
             
             @Override
             public void onFailure(int arg0, String arg1, Bundle arg2) {
-                Log.e(TAG, "Failed to get receipts");
+                oThis.receiveOuyaReceipt(null, null, 0);
             }
         });
     }
+    public native void receiveOuyaReceipt(String id, String date, int price);
     
-    public native void receiveOuyaGamerID(String uuid);
+    /**
+     * Return the gamer id
+     */
     public static void requestOuyaGamerID(){
-        Log.d(TAG, "Requesting OUYA gamer ID");
         OuyaFacade.getInstance().requestGamerUuid(new CancelIgnoringOuyaResponseListener<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.i(TAG, "Player UUID is: " + result);
                 oThis.receiveOuyaGamerID(result);
             }
             
             @Override
             public void onFailure(int arg0, String arg1, Bundle arg2) {
-                Log.e(TAG, "Failed to get player UUID");
                 oThis.receiveOuyaGamerID(null);
             }
         });
     }
+    public native void receiveOuyaGamerID(String uuid);
     
     //------------------------------------------------------------------
     // OpenURL callback.

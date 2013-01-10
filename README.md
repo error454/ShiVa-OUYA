@@ -103,4 +103,22 @@ user.sendEventImmediate ( hUser, "OuyaController", "onUpdateOldKeyStates", 0 )
 
 ##Purchasing
 
-Coming soon
+There are 4 key handlers in the OuyaPurchase AI that let you deal with in-app purchases:
+
+* onRequestOuyaGamerID( )
+* onRequestOuyaProduct( )
+* onRequestOuyaPurchase( nIndex )
+* onRequestOuyaReceipts( )
+
+Since these fire off async calls, each of these 5 handlers has a receiver counterpart to receive the callback:
+
+* onReceiveOuyaGamerID ( sID )
+* onReceiveOuyaProduct ( sID, sProductName, nCostInCents )
+* onReceiveOuyaPurchase ( bSuccess )
+* onReceiveOuyaReceipt ( sID, sDate, nPrice )
+
+These 8 handlers together form the entire process of in-app purchases.  To configure, you need to do the following in the main java file (yourgame.java if you haven't renamed it):
+
+1. Set `bInAppPurchasingEnabled = true;`
+2. Set `DEVELOPER_ID` to your OUYA developer ID
+3. Set `PRODUCT_ID_LIST` to your product IDs as defined in your OUYA dev portal. e.g `public static final List<Purchasable> PRODUCT_ID_LIST = Arrays.asList(new Purchasable("long_sword"), new Purchasable("sharp_axe")`
