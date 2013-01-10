@@ -114,7 +114,11 @@ extern "C"
             {
                 jclass pJNIActivityClass = pJNIEnv->FindClass("com/yourgame/ouya/yourgame");
                 jmethodID pJNIMethodID = pJNIEnv->GetStaticMethodID(pJNIActivityClass, "requestOuyaPurchase", "(I)V");
-                pJNIEnv->CallStaticVoidMethod(pJNIActivityClass, pJNIMethodID, _pIn[0].GetNumberValue ( ));
+                pJNIEnv->CallStaticVoidMethod(pJNIActivityClass, pJNIMethodID, int(_pIn[0].GetNumberValue ( )));
+            }
+            else
+            {
+            	return -1;
             }
         }
         return 0 ;
