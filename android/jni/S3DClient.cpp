@@ -136,16 +136,28 @@ extern "C"
         return 0 ;
     }
 
+    static int ClientFunctionCallback_onEngineInitialized ( int _iInCount, const S3DX::AIVariable *_pIn, S3DX::AIVariable *_pOut )
+	{
+		JNIEnv *pJNIEnv = GetJNIEnv();
+		if (pJNIEnv)
+		{
+			jclass pJNIActivityClass = pJNIEnv->FindClass("com/yourgame/ouya/yourgame");
+			jmethodID pJNIMethodID = pJNIEnv->GetStaticMethodID(pJNIActivityClass, "engineInitialized", "()V");
+			pJNIEnv->CallStaticVoidMethod(pJNIActivityClass, pJNIMethodID, NULL);
+		}
+		return 0;
+	}
     //-----------------------------------------------------------------------------
 
-    static const int        iClientFunctionsCount = 5 ; // Modify this number when adding new functions just below
+    static const int        iClientFunctionsCount = 6 ; // Modify this number when adding new functions just below
     static S3DX::AIFunction aClientFunctions  [ ] =
     {
         { "onEngineEvent", ClientFunctionCallback_onEngineEvent, "...", "...", "...", 0 },
         { "onRequestOuyaGamerID", ClientFunctionCallback_onRequestOuyaGamerID, "...", "...", "...", 0 },
         { "onRequestOuyaProductList", ClientFunctionCallback_onRequestOuyaProductList, "...", "...", "...", 0 },
         { "onRequestOuyaPurchase", ClientFunctionCallback_onRequestOuyaPurchase, "...", "...", "...", 0 },
-        { "onRequestOuyaReceipts", ClientFunctionCallback_onRequestOuyaReceipts, "...", "...", "...", 0 }
+        { "onRequestOuyaReceipts", ClientFunctionCallback_onRequestOuyaReceipts, "...", "...", "...", 0 },
+        { "onEngineInitialized", ClientFunctionCallback_onEngineInitialized, "...", "...", "...", 0 }
     } ;
 
     //----------------------------------------------------------------------       
@@ -603,17 +615,15 @@ extern "C"
 	{
 		S3DX::AIVariable args[1];
 		args[0].SetBooleanValue( success );
-		S3DClient_SendEventToCurrentUser( "OuyaController", "onReceiveOuyaPurchase", 1, (const void*)args);
+		S3DClient_SendEventToCurrentUser( "OuyaPurchase", "onReceiveOuyaPurchase", 1, (const void*)args);
 	}
 
-    JNIEXPORT void JNICALL Java_com_yourgame_ouya_yourgame_receiveOuyaReceipt ( JNIEnv *_pEnv, jobject obj, jstring id, jstring date, jint price)
+    JNIEXPORT void JNICALL Java_com_yourgame_ouya_yourgame_receiveOuyaReceipt ( JNIEnv *_pEnv, jobject obj, jstring id, jlong date, jint price)
 	{
     	S3DX::AIVariable args[3];
     	args[0].SetStringValue("");
-    	args[1].SetStringValue("");
 
     	const char *rawID;
-    	const char *rawDate;
 
     	if(id != NULL)
     	{
@@ -621,21 +631,13 @@ extern "C"
     		args[0].SetStringValue(rawID);
     	}
 
-    	if(date != NULL)
-    	{
-    		rawDate = _pEnv->GetStringUTFChars(date, 0);
-    		args[1].SetStringValue(rawDate);
-    	}
-
+    	args[1].SetNumberValue(date);
     	args[2].SetNumberValue(price);
 
 		S3DClient_SendEventToCurrentUser( "OuyaPurchase", "onReceiveOuyaReceipt", 3, (const void*)args);
 
 		if(id != NULL)
 			_pEnv->ReleaseStringUTFChars(id, rawID);
-
-		if(date != NULL)
-			_pEnv->ReleaseStringUTFChars(date, rawDate);
 	}
 
     JNIEXPORT void JNICALL Java_com_yourgame_ouya_yourgame_receiveOuyaGamerID ( JNIEnv *_pEnv, jobject obj, jstring id)
