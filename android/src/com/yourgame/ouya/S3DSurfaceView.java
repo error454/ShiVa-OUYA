@@ -37,7 +37,6 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
 {
     //------------------------------------------------------------------
     // Constants.
-    
     //A hash map whose <Key, Value> pair is <Device ID, Player Number>
     private HashMap<Integer, Integer> mPlayerHash = new HashMap<Integer, Integer>(4);
     
@@ -62,7 +61,6 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
         // Create the renderer
         //
         oRenderer       = new S3DRenderer ( context, sCacheDirPath, sHomeDirPath, sPackDirPath, packFileDescriptor, packFileOffset, packFileLength, forceDefaultOrientation ) ;
-        
         // Detect display orientation
         //
         detectDisplayOrientation ( context ) ;
@@ -220,31 +218,13 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
         return true ;
     }
     
-    /**
-     * Finds a player based on the device ID. If the device ID doesn't exist, it is
-     * added to the hashmap as a new player.
-     * @param deviceID the device ID from onKeyDown or onKeyUp KeyEvent getDeviceId()
-     * @return The player number from 0-3
-     */
-    private int findOrCreatePlayer(int deviceID){
-        Integer player = mPlayerHash.get(deviceID);
-        if(player != null){
-            return player;
-        }
-        else{
-            int size = mPlayerHash.size();
-            mPlayerHash.put(deviceID, size);
-            return size;
-        }
-    }
-
     //------------------------------------------------------------------
     // OUYA controller Down/Up
     //
     @Override
     public boolean onKeyDown ( final int keyCode, KeyEvent event )
     {
-        final int player = findOrCreatePlayer(event.getDeviceId());
+        final int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId()); 
         
 //      final int uniCode = event.getUnicodeChar ( ) ;
         
@@ -266,7 +246,7 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     {
 //        final int uniCode = event.getUnicodeChar ( ) ;
 
-        final int player = findOrCreatePlayer(event.getDeviceId());
+        final int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId()); 
         
         queueEvent
         (
@@ -283,7 +263,7 @@ class S3DSurfaceView extends GLSurfaceView //implements OnClickListener //, OnKe
     
     @Override
     public boolean onGenericMotionEvent(final MotionEvent event) {
-        final int player = findOrCreatePlayer(event.getDeviceId());
+        final int player = OuyaController.getPlayerNumByDeviceId(event.getDeviceId()); 
         
         queueEvent
         (
@@ -417,7 +397,7 @@ class S3DRenderer implements GLSurfaceView.Renderer
         oContext    = context ;
         bPaused     = false ;
     }
-
+    
     //------------------------------------------------------------------
     // Initialization handling
     //
