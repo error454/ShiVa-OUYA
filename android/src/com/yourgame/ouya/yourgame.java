@@ -77,6 +77,8 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     
     private static final List<Purchasable> PRODUCT_ID_LIST = Arrays.asList(new Purchasable("YOUR_PURCHASEABLES"));
     private static ArrayList<Product> mProducts;
+    private boolean mPurchaseResultsAvailable = false;
+    private boolean mPurchaseSuccess; 
     
     //------------------------------------------------------------------
     // @@BEGIN_ACTIVITY_MESSAGES_LIST@@
@@ -401,6 +403,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     }
     
     //------------------------------------------------------------------
+    @Override
     protected void onStop ( ) 
     {
         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
@@ -410,6 +413,7 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     }
     
     //------------------------------------------------------------------
+    @Override
     protected void onDestroy ( ) 
     {
         Log.d ( Globals.sApplicationName, "--------------------------------------------" ) ;
@@ -484,16 +488,21 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
     public synchronized static void requestOuyaPurchase(int index)
     {
         if(index < PRODUCT_ID_LIST.size()){
+            oThis.mPurchaseResultsAvailable = false;
             Purchasable productToBuy = PRODUCT_ID_LIST.get(index);
             OuyaFacade.getInstance().requestPurchase(productToBuy, new CancelIgnoringOuyaResponseListener<Product>() {
                 @Override
                 public void onSuccess(Product product) {
-                    oThis.receiveOuyaPurchase(true);
+                    oThis.mPurchaseResultsAvailable = true;
+                    oThis.mPurchaseSuccess = true;
                 }
                 
                 public void onFailure(int errorCode, String errorMessage, Bundle errorBundle) {
-                    oThis.receiveOuyaPurchase(false);
+                    Log.i(TAG, "purchase failed");
+                    oThis.mPurchaseResultsAvailable = true;
+                    oThis.mPurchaseSuccess = false;
                 };
+                
             });
         }
         else{
@@ -519,17 +528,17 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
                     throw new RuntimeException(e);
                 }
                 for (Receipt r : receipts) {
-                    oThis.receiveOuyaReceipt(r.getIdentifier(), r.getPurchaseDate().toString(), r.getPriceInCents());
+                    oThis.receiveOuyaReceipt(r.getIdentifier(), r.getPurchaseDate().getTime() / 1000, r.getPriceInCents());
                 }
             }
             
             @Override
             public void onFailure(int arg0, String arg1, Bundle arg2) {
-                oThis.receiveOuyaReceipt(null, null, 0);
+                oThis.receiveOuyaReceipt(null, 0, 0);
             }
         });
     }
-    public native void receiveOuyaReceipt(String id, String date, int price);
+    public native void receiveOuyaReceipt(String id, long date, int price);
     
     /**
      * Return the gamer id
@@ -548,6 +557,16 @@ public class yourgame extends Activity implements MediaPlayer.OnCompletionListen
         });
     }
     public native void receiveOuyaGamerID(String uuid);
+    
+    /**
+     * Called by ShiVa once the game engine is initialized.
+     * Used so we know when it's safe to send purchase results back to ShiVa
+     */
+    public static void engineInitialized(){
+        Log.i(TAG, "engineINitialized");
+        if(oThis.mPurchaseResultsAvailable)
+            oThis.receiveOuyaPurchase(oThis.mPurchaseSuccess);
+    }
     
     //------------------------------------------------------------------
     // OpenURL callback.
