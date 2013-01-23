@@ -12,11 +12,17 @@ function OuyaPurchase.requestPurchase ( nIndex )
     then
         log.message ( "A purchase is already in progress" )
     else
-        this.bPurchaseInProgress ( true )
-        this.bPurchaseSuccess ( false )
-        this.nPurchaseRequestStart ( application.getTotalFrameTime ( ))
+        local result = system.callClientFunction ( "onRequestOuyaPurchase", nIndex )
+        if(result == -1)
+        then
+            this.sendEvent ( "onReceiveOuyaPurchase", false )
+        else
+            log.message ( "Shiva purchase is in progress" )
+            this.bPurchaseInProgress ( true )
+            this.bPurchaseSuccess ( false )
+            this.nPurchaseRequestStart ( application.getTotalFrameTime ( ))
+        end
         
-        system.callClientFunction ( "onRequestOuyaPurchase", nIndex )
     end
 	
 --------------------------------------------------------------------------------

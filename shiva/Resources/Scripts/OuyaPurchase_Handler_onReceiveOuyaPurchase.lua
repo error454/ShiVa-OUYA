@@ -20,6 +20,9 @@ function OuyaPurchase.onReceiveOuyaPurchase ( bSuccess )
     
     log.message ( "Purchase took: " .. application.getTotalFrameTime ( ) - this.nPurchaseRequestStart ( ) .. " seconds" )
 	
+    --You might call your main AI from here
+    --user.sendEvent ( this.getUser ( ), "MainMenuAI", "onPurchaseComplete", bSuccess )
+    
 --------------------------------------------------------------------------------
 end
 --------------------------------------------------------------------------------
